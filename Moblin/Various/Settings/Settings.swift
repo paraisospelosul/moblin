@@ -879,6 +879,7 @@ private nonisolated(unsafe) let allBundledAlertsMediaGalleryImages = [
 ]
 
 private nonisolated(unsafe) let allBundledAlertsMediaGallerySounds = [
+    SettingsAlertsMediaGalleryItem(name: "Mute loop"),
     SettingsAlertsMediaGalleryItem(name: "Notification 2"),
     SettingsAlertsMediaGalleryItem(name: "Boing"),
     SettingsAlertsMediaGalleryItem(name: "Cash register"),

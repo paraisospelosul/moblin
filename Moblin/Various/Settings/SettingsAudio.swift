@@ -169,6 +169,8 @@ class SettingsAudio: Codable, ObservableObject {
     var outputToInputChannelsMap: SettingsAudioOutputToInputChannelsMap = .init()
     @Published var gainDb: Float = 0.0
     @Published var preferStereoMic: Bool = false
+    @Published var muteSoundEnabled: Bool = false
+    var muteSoundId: UUID?
 
     init() {}
 
@@ -176,6 +178,8 @@ class SettingsAudio: Codable, ObservableObject {
         case audioOutputToInputChannelsMap
         case gainDb
         case preferStereoMic
+        case muteSoundEnabled
+        case muteSoundId
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -183,6 +187,8 @@ class SettingsAudio: Codable, ObservableObject {
         try container.encode(.audioOutputToInputChannelsMap, outputToInputChannelsMap)
         try container.encode(.gainDb, gainDb)
         try container.encode(.preferStereoMic, preferStereoMic)
+        try container.encode(.muteSoundEnabled, muteSoundEnabled)
+        try container.encode(.muteSoundId, muteSoundId)
     }
 
     required init(from decoder: any Decoder) throws {
@@ -192,5 +198,7 @@ class SettingsAudio: Codable, ObservableObject {
                                                     .init())
         gainDb = container.decode(.gainDb, Float.self, 0.0)
         preferStereoMic = container.decode(.preferStereoMic, Bool.self, false)
+        muteSoundEnabled = container.decode(.muteSoundEnabled, Bool.self, false)
+        muteSoundId = container.decode(.muteSoundId, UUID?.self, nil)
     }
 }
