@@ -25,6 +25,8 @@ protocol SrtlaServerDelegate: AnyObject {
 class SrtlaServer: @unchecked Sendable {
     private var listener: NWListener?
     private var clients: [Data: SrtlaServerClient] = [:]
+    private let maxClients = 4
+    private var reg1RateLimits: [NWEndpoint: (count: Int, resetTime: ContinuousClock.Instant)] = [:]
     let settings: SettingsSrtlaServer
     private let srtServer: SrtServer
     private let srtServerNoSrtlaPatches: SrtServer
@@ -113,6 +115,8 @@ class SrtlaServer: @unchecked Sendable {
     }
 
     private func handlePeriodicTimer() {
+        let now = ContinuousClock.now
+        reg1RateLimits = reg1RateLimits.filter { _, limit in now < limit.resetTime }
         var groupIdsToRemove: [Data] = []
         for (groupId, client) in clients where client.handlePeriodicTimer() {
             client.stop()
@@ -219,6 +223,25 @@ class SrtlaServer: @unchecked Sendable {
         guard packet.count == 258 else {
             logger.info("srtla-server: Wrong reg 1 packet length \(packet.count)")
             return
+        }
+        guard clients.count < maxClients else {
+            logger.info("srtla-server: Dropping reg 1, maximum clients reached (\(maxClients))")
+            return
+        }
+        let now = ContinuousClock.now
+        let endpoint = connection.endpoint
+        if let limit = reg1RateLimits[endpoint] {
+            if now < limit.resetTime {
+                if limit.count >= 3 {
+                    logger.debug("srtla-server: Rate limited reg 1 from \(endpoint)")
+                    return
+                }
+                reg1RateLimits[endpoint] = (limit.count + 1, limit.resetTime)
+            } else {
+                reg1RateLimits[endpoint] = (1, now + .seconds(1))
+            }
+        } else {
+            reg1RateLimits[endpoint] = (1, now + .seconds(1))
         }
         let groupId = packet[srtControlTypeSize ..< srtControlTypeSize + 128] + Data.random(length: 128)
         guard clients[groupId] == nil else {

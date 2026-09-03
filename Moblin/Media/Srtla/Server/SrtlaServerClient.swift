@@ -6,6 +6,7 @@ import Foundation
 import Network
 
 private let clientRemoveTimeout = 10.0
+private let pendingHandshakeTimeout = 2.5
 private let localSrtServerConnectionReceiveBatchSize = 25
 
 private class NakPacket {
@@ -67,6 +68,7 @@ class SrtlaServerClient: @unchecked Sendable {
     private var periodicNakTimer = SimpleTimer(queue: srtlaServerQueue)
     private var dataPacketsToSend: [Data] = []
     private var latestFlushDataPacketsTime = ContinuousClock.now
+    private var registered = false
 
     init(srtPort: UInt16) {
         logger.info("srtla-server-client: Creating local SRT server connection.")
@@ -138,6 +140,7 @@ class SrtlaServerClient: @unchecked Sendable {
             logger.info("srtla-server-client: Connection \(connection.endpoint) already registered")
             return
         }
+        registered = true
         let connection = SrtlaServerClientConnection(connection: connection)
         connection.delegate = self
         connections.append(connection)
@@ -203,7 +206,11 @@ class SrtlaServerClient: @unchecked Sendable {
                     .info("srtla-server-client: Removed connection. Using \(connections.count) connection(s)")
             }
         }
-        return connections.isEmpty && createdAt.duration(to: now) > .seconds(clientRemoveTimeout)
+        if connections.isEmpty {
+            let timeout = registered ? clientRemoveTimeout : pendingHandshakeTimeout
+            return createdAt.duration(to: now) > .seconds(timeout)
+        }
+        return false
     }
 }
 
