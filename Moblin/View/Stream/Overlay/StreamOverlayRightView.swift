@@ -755,9 +755,25 @@ private struct RightOverlayBottomVerticalView: View {
                     }
                 }
                 if show.zoomPresets, zoom.hasZoom {
-                    StreamOverlayRightZoomPresetVSelctorView(model: model,
-                                                             zoom: zoom,
-                                                             width: width)
+                    VStack(spacing: 4) {
+                        if model.hideQuickButtons {
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    model.hideQuickButtons = false
+                                }
+                            } label: {
+                                Image(systemName: "eye")
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(.orange)
+                                    .frame(width: 28, height: 28)
+                                    .background(.black.opacity(0.5))
+                                    .clipShape(Circle())
+                            }
+                        }
+                        StreamOverlayRightZoomPresetVSelctorView(model: model,
+                                                                 zoom: zoom,
+                                                                 width: width)
+                    }
                 }
             }
             StreamOverlayRightSceneVSelectorView(database: database,

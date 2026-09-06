@@ -596,7 +596,28 @@ struct MainView: View {
                 }
                 .frame(width: model.panelHidden ? 1 : settingsHalfWidth)
             }
-            ControlBarLandscapeView(model: model, quickButtons: quickButtons)
+            if !model.hideQuickButtons {
+                ControlBarLandscapeView(model: model, quickButtons: quickButtons)
+                    .transition(.move(edge: .trailing))
+            }
+        }
+        .overlay(alignment: .trailing) {
+            if model.hideQuickButtons {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        model.hideQuickButtons = false
+                    }
+                } label: {
+                    Image(systemName: "eye")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 36, height: 36)
+                        .background(.black.opacity(0.6))
+                        .clipShape(Circle())
+                }
+                .padding(.trailing, 8)
+                .transition(.opacity)
+            }
         }
     }
 

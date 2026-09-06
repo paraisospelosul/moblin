@@ -134,29 +134,47 @@ private struct IconAndSettingsView: View {
     @ObservedObject var store: Store
 
     var body: some View {
-        HCenter {
-            Button {
-                model.toggleShowingPanel(type: nil, panel: .store)
-            } label: {
-                Image("\(store.iconImage)NoBackground")
-                    .interpolation(.high)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: controlBarButtonSize, height: controlBarButtonSize)
+        VStack(spacing: 4) {
+            HCenter {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        model.hideQuickButtons.toggle()
+                    }
+                } label: {
+                    Image(systemName: model.hideQuickButtons ? "eye.slash" : "eye")
+                        .frame(width: controlBarButtonSize, height: controlBarButtonSize)
+                        .overlay(
+                            Circle()
+                                .stroke(.secondary)
+                        )
+                        .foregroundStyle(model.hideQuickButtons ? .orange : .white)
+                }
+                .buttonStyle(.borderless)
+                Button {
+                    model.toggleShowingPanel(type: nil, panel: .settings)
+                } label: {
+                    Image(systemName: "gearshape")
+                        .frame(width: controlBarButtonSize, height: controlBarButtonSize)
+                        .overlay(
+                            Circle()
+                                .stroke(.secondary)
+                        )
+                        .foregroundStyle(.white)
+                }
+                .buttonStyle(.borderless)
             }
-            .buttonStyle(.borderless)
-            Button {
-                model.toggleShowingPanel(type: nil, panel: .settings)
-            } label: {
-                Image(systemName: "gearshape")
-                    .frame(width: controlBarButtonSize, height: controlBarButtonSize)
-                    .overlay(
-                        Circle()
-                            .stroke(.secondary)
-                    )
-                    .foregroundStyle(.white)
+            HCenter {
+                Button {
+                    model.toggleShowingPanel(type: nil, panel: .store)
+                } label: {
+                    Image("\(store.iconImage)NoBackground")
+                        .interpolation(.high)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: controlBarButtonSize, height: controlBarButtonSize)
+                }
+                .buttonStyle(.borderless)
             }
-            .buttonStyle(.borderless)
         }
     }
 }
