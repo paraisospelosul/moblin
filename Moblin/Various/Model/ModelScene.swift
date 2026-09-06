@@ -382,7 +382,10 @@ extension Model {
     }
 
     func getFillFrame(scene: SettingsScene) -> Bool {
-        scene.fillFrame
+        if isPortraitUiCropTo16x9() {
+            return true
+        }
+        return scene.fillFrame
     }
 
     func widgetsInCurrentSceneOrRemoteScene(onlyEnabled: Bool) -> [WidgetInScene] {
@@ -1077,8 +1080,12 @@ extension Model {
             effects.append(drawOnStreamEffect)
         }
         effects += registerGlobalVideoEffectsOnTop()
+        var rotation = scene.videoSourceRotation
+        if isPortraitUiCropTo16x9() {
+            rotation = (rotation + 90).truncatingRemainder(dividingBy: 360)
+        }
         media.setPendingAfterAttachEffects(effects: effects,
-                                           rotation: scene.videoSourceRotation,
+                                           rotation: rotation,
                                            mirror: scene.mirror)
         for effect in browserEffects.values where !effects.contains(effect) {
             effect.setSceneWidget(sceneWidget: nil, crops: [])
