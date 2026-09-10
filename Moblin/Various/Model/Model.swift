@@ -557,6 +557,7 @@ final class Model: NSObject, ObservableObject, @unchecked Sendable {
     var youTubeStreamUpdateTimePollDelta: ContinuousClock.Duration = .seconds(15)
     var youTubeStreamUpdateTime = ContinuousClock.now
     var obsWebSocket: ObsWebSocket?
+    var livePix: LivePix?
     var chatPostId = 0
     let chat = ChatProvider(maximumNumberOfMessages: maximumNumberOfChatMessages)
     let chatActivityFeed = ChatProvider(maximumNumberOfMessages: maximumNumberOfChatMessages)
@@ -1255,6 +1256,7 @@ final class Model: NSObject, ObservableObject, @unchecked Sendable {
             Gimbal.shared = Gimbal(model: self)
         }
         setGimbalTracking(on: database.gimbal.tracking)
+        setupLivePix()
         removeDeadMacrosSettings()
         DispatchQueue.main.async {
             self.writeFileLogToFile()

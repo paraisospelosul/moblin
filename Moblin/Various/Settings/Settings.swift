@@ -1222,6 +1222,7 @@ class Database: Codable, ObservableObject {
     @Published var torchLevel: Float = 1.0
     @Published var appMode: SettingsAppMode = .streaming
     var httpProxy: SettingsHttpProxy = .init()
+    var livePix: SettingsLivePix = .init()
 
     func getSavedWiFiNetwork(ssid: String) -> SettingsWiFi? {
         savedWifiNetworks.first(where: { $0.ssid == ssid })
@@ -1355,6 +1356,7 @@ class Database: Codable, ObservableObject {
         case torchLevel
         case appMode
         case httpProxy
+        case livePix
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -1449,6 +1451,7 @@ class Database: Codable, ObservableObject {
         try container.encode(.torchLevel, torchLevel)
         try container.encode(.appMode, appMode)
         try container.encode(.httpProxy, httpProxy)
+        try container.encode(.livePix, livePix)
     }
 
     init() {}
@@ -1613,6 +1616,7 @@ class Database: Codable, ObservableObject {
         let httpProxyDefault = SettingsHttpProxy()
         httpProxyDefault.enabled = debug.httpProxyToBeRemoved
         httpProxy = container.decode(.httpProxy, SettingsHttpProxy.self, httpProxyDefault)
+        livePix = container.decode(.livePix, SettingsLivePix.self, .init())
     }
 }
 

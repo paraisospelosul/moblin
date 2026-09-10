@@ -115,6 +115,11 @@ struct SettingsView: View {
                 } label: {
                     Label("Moblink", systemImage: "app.connected.to.app.below.fill")
                 }
+                NavigationLink {
+                    LivePixSettingsView(livePix: database.livePix)
+                } label: {
+                    Label("LivePix", systemImage: "dollarsign.circle")
+                }
                 if database.showAllSettings {
                     NavigationLink {
                         MediaPlayersSettingsView(mediaPlayers: database.mediaPlayers)

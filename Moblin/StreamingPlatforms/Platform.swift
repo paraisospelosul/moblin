@@ -6,6 +6,7 @@ enum Platform: Codable, CaseIterable {
     case openStreamingPlatform
     case twitch
     case youTube
+    case livePix
 
     func name() -> String {
         switch self {
@@ -19,6 +20,8 @@ enum Platform: Codable, CaseIterable {
             String(localized: "Twitch")
         case .youTube:
             String(localized: "YouTube")
+        case .livePix:
+            String(localized: "LivePix")
         }
     }
 
@@ -34,6 +37,8 @@ enum Platform: Codable, CaseIterable {
             "TwitchLogo"
         case .youTube:
             "YouTubeLogo"
+        case .livePix:
+            "LivePixLogo"
         }
     }
 }
