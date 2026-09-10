@@ -442,6 +442,8 @@ struct RemoteControlRemoteSceneSettingsWidget: Codable {
             return nil
         case .pomodoroTimer:
             return nil
+        case .livePixAlert:
+            return nil
         }
     }
 

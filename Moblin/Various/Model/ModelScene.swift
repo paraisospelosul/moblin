@@ -760,6 +760,7 @@ extension Model {
         resetWheelOfLuckEffects(widgets: widgets)
         resetBingoCardEffects(widgets: widgets)
         resetPomodoroTimerEffects(widgets: widgets)
+        resetLivePixAlertEffects(widgets: widgets)
         browsers = browserEffects.map { widgetId, browser in
             let name = getWidgetName(id: widgetId) ?? "Unknown"
             return Browser(name: name, browserEffect: browser)
@@ -1016,6 +1017,15 @@ extension Model {
         pomodoroAudioPlayer?.play()
     }
 
+    private func resetLivePixAlertEffects(widgets: [SettingsWidget]) {
+        livePixAlertEffects.removeAll()
+        for widget in widgets where widget.type == .livePixAlert {
+            let effect = LivePixAlertEffect(duration: widget.livePixAlert.duration)
+            effect.effects = widget.getEffects(model: self)
+            livePixAlertEffects[widget.id] = effect
+        }
+    }
+
     private func isQuickButtonOn(type: SettingsQuickButtonType) -> Bool {
         database.quickButtons.first(where: { $0.type == type })?.isOn ?? false
     }
@@ -1174,6 +1184,8 @@ extension Model {
                 addSceneBingoCardEffects(sceneWidget, widget, &effects)
             case .pomodoroTimer:
                 addScenePomodoroTimerEffects(sceneWidget, widget, &effects)
+            case .livePixAlert:
+                addSceneLivePixAlertEffects(sceneWidget, widget, &effects)
             }
         }
     }
@@ -1475,6 +1487,19 @@ extension Model {
         effects.append(effect)
     }
 
+    private func addSceneLivePixAlertEffects(
+        _ sceneWidget: SettingsSceneWidget,
+        _ widget: SettingsWidget,
+        _ effects: inout [VideoEffect]
+    ) {
+        guard let effect = livePixAlertEffects[widget.id], !effects.contains(effect) else {
+            return
+        }
+        effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        effect.setSettings(duration: widget.livePixAlert.duration)
+        effects.append(effect)
+    }
+
     private func updateRemoteSceneSettings() {
         guard !remoteSceneSettingsUpdating else {
             return
@@ -1708,6 +1733,11 @@ extension Model {
             sceneWidget.layout.x = 0.78
             sceneWidget.layout.y = 1.388
             sceneWidget.layout.size = 20
+        case .livePixAlert:
+            sceneWidget.layout.alignment = .top
+            sceneWidget.layout.x = 0
+            sceneWidget.layout.y = 8
+            sceneWidget.layout.size = 35
         default:
             break
         }

@@ -1054,6 +1054,32 @@ class SettingsWidgetQrCode: Codable {
     }
 }
 
+class SettingsWidgetLivePixAlert: Codable, ObservableObject {
+    @Published var duration: Double = 8.0
+
+    init() {}
+
+    enum CodingKeys: CodingKey {
+        case duration
+    }
+
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(.duration, duration)
+    }
+
+    required init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        duration = container.decode(.duration, Double.self, 8.0)
+    }
+
+    func clone() -> SettingsWidgetLivePixAlert {
+        let new = SettingsWidgetLivePixAlert()
+        new.duration = duration
+        return new
+    }
+}
+
 enum SettingsWidgetAlertPositionType: String, Codable, CaseIterable {
     case scene = "Scene"
     case face = "Face"
@@ -2445,6 +2471,7 @@ class SettingsWidget: Codable, Identifiable, Equatable, ObservableObject, Named,
     var wheelOfLuck: SettingsWidgetWheelOfLuck = .init()
     var bingoCard: SettingsWidgetBingoCard = .init()
     var pomodoroTimer: SettingsWidgetPomodoroTimer = .init()
+    var livePixAlert: SettingsWidgetLivePixAlert = .init()
     @Published var enabled: Bool = true
     @Published var effects: [SettingsVideoEffect] = []
 
@@ -2478,6 +2505,7 @@ class SettingsWidget: Codable, Identifiable, Equatable, ObservableObject, Named,
         case wheelOfLuck
         case bingoCard
         case pomodoroTimer
+        case livePixAlert
         case enabled
         case effects
     }
@@ -2505,6 +2533,7 @@ class SettingsWidget: Codable, Identifiable, Equatable, ObservableObject, Named,
         try container.encode(.wheelOfLuck, wheelOfLuck)
         try container.encode(.bingoCard, bingoCard)
         try container.encode(.pomodoroTimer, pomodoroTimer)
+        try container.encode(.livePixAlert, livePixAlert)
         try container.encode(.enabled, enabled)
         try container.encode(.effects, effects)
     }
@@ -2532,6 +2561,7 @@ class SettingsWidget: Codable, Identifiable, Equatable, ObservableObject, Named,
         wheelOfLuck = container.decode(.wheelOfLuck, SettingsWidgetWheelOfLuck.self, .init())
         bingoCard = container.decode(.bingoCard, SettingsWidgetBingoCard.self, .init())
         pomodoroTimer = container.decode(.pomodoroTimer, SettingsWidgetPomodoroTimer.self, .init())
+        livePixAlert = container.decode(.livePixAlert, SettingsWidgetLivePixAlert.self, .init())
         enabled = container.decode(.enabled, Bool.self, true)
         effects = container.decode(.effects, [SettingsVideoEffect].self, [])
         migrateFromOlderVersions()
@@ -3748,6 +3778,7 @@ enum SettingsWidgetType: String, Codable, CaseIterable {
     case bingoCard = "Bingo card"
     case crop = "Crop"
     case pomodoroTimer = "Pomodoro timer"
+    case livePixAlert = "LivePix alert"
 
     func toString() -> String {
         switch self {
@@ -3789,6 +3820,8 @@ enum SettingsWidgetType: String, Codable, CaseIterable {
             String(localized: "Crop")
         case .pomodoroTimer:
             String(localized: "Pomodoro timer")
+        case .livePixAlert:
+            String(localized: "LivePix alert")
         }
     }
 
@@ -3832,6 +3865,8 @@ enum SettingsWidgetType: String, Codable, CaseIterable {
             "square.grid.3x3.square"
         case .pomodoroTimer:
             "timer"
+        case .livePixAlert:
+            "dollarsign.circle"
         }
     }
 
@@ -3883,6 +3918,8 @@ enum SettingsWidgetType: String, Codable, CaseIterable {
             String(localized: "A bingo card widget shows an interactive bingo card.")
         case .pomodoroTimer:
             String(localized: "A Pomodoro timer widget shows a focus and break timer.")
+        case .livePixAlert:
+            String(localized: "A LivePix alert widget shows donation alerts on screen.")
         }
     }
 }
