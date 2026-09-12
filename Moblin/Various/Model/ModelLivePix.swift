@@ -76,8 +76,13 @@ extension Model: @preconcurrency LivePixDelegate {
         let sample = LivePixDonation(
             id: UUID().uuidString,
             author: "Apoiador LivePix",
-            amount: 15.0,
-            message: "Parabéns pela live! Continue com o ótimo trabalho! 🚀"
+            message: "Parabéns pela live! Continue com o ótimo trabalho! 🚀",
+            formattedAmount: "R$ 15,00",
+            value: 15.0,
+            audioUrl: nil,
+            ttsUrl: nil,
+            color: "#22c55e",
+            createdAt: .init()
         )
         livePixDidReceiveDonation(sample)
     }
