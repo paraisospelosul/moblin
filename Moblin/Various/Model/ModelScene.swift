@@ -1734,7 +1734,7 @@ extension Model {
             sceneWidget.layout.y = 1.388
             sceneWidget.layout.size = 20
         case .livePixAlert:
-            sceneWidget.layout.alignment = .top
+            sceneWidget.layout.alignment = .topCenter
             sceneWidget.layout.x = 0
             sceneWidget.layout.y = 8
             sceneWidget.layout.size = 35

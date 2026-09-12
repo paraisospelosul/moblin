@@ -148,7 +148,7 @@ private class AudioMeasurement {
 }
 
 final class AudioUnit: NSObject, @unchecked Sendable {
-    static var onAudioSample: ((CMSampleBuffer) -> Void)?
+    nonisolated(unsafe) static var onAudioSample: ((CMSampleBuffer) -> Void)?
     let encoder = AudioEncoder(lockQueue: processorPipelineQueue)
     var previewEncoder: AudioEncoder?
     private var input: AVCaptureDeviceInput?
