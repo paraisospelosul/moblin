@@ -421,6 +421,11 @@ struct QuickButtonsInnerView: View {
         model.togglePhotoShoot()
     }
 
+    private func editWidgetsAction() {
+        model.toggleQuickButton(type: .editWidgets)
+        model.editWidgetsMode = button.isOn
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             ZStack {
@@ -995,6 +1000,14 @@ struct QuickButtonsInnerView: View {
                                          buttonSize: size)
                         {
                             photoShootAction()
+                        }
+                    case .editWidgets:
+                        QuickButtonImage(model: model,
+                                         quickButtonsSettings: quickButtonsSettings,
+                                         button: button,
+                                         buttonSize: size)
+                        {
+                            editWidgetsAction()
                         }
                     }
                 }

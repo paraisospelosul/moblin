@@ -218,6 +218,50 @@ extension Model {
         sceneUpdated()
     }
 
+    func updateWidgetLayoutDirectly(widgetId: UUID, sceneWidget: SettingsSceneWidget) {
+        objectWillChange.send()
+        if let effect = imageEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = textEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = browserEffects[widgetId] {
+            if let scene = getSelectedScene() {
+                effect.setSceneWidget(
+                    sceneWidget: sceneWidget.clone(),
+                    crops: findWidgetCrops(scene: scene, sourceWidgetId: widgetId)
+                )
+            }
+        } else if let effect = mapEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = qrCodeEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = alertsEffects[widgetId] {
+            effect.setPosition(x: sceneWidget.layout.x, y: sceneWidget.layout.y)
+        } else if let effect = videoSourceEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = scoreboardEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = vTuberEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = pngTuberEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = snapshotEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = chatEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = chatEmoteComboEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = slideshowEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = wheelOfLuckEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = bingoCardEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        } else if let effect = pomodoroTimerEffects[widgetId] {
+            effect.setSceneWidget(sceneWidget: sceneWidget.clone())
+        }
+    }
+
     func sceneUpdated(attachCamera: Bool = false, updateRemoteScene: Bool = true) {
         guard let scene = getSelectedScene() else {
             sceneUpdatedOff()

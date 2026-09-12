@@ -2039,6 +2039,11 @@ private func addMissingQuickButtonsPageThree(database: Database) {
                                  imageOff: "person.crop.square.badge.camera",
                                  page: page)
     updateQuickButton(database: database, button: button)
+    button = SettingsQuickButton(type: .editWidgets,
+                                 imageOn: "arrow.up.and.down.and.arrow.left.and.right",
+                                 imageOff: "arrow.up.and.down.and.arrow.left.and.right",
+                                 page: page)
+    updateQuickButton(database: database, button: button)
 }
 
 @MainActor

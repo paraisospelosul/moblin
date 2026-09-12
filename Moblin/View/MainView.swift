@@ -471,8 +471,10 @@ struct MainView: View {
                     .onLongPressGesture {
                         handleLeaveTapToFocus()
                     }
+                    .allowsHitTesting(!model.editWidgetsMode)
                 StreamOverlayTapGridView(camera: model.camera, size: layout.size)
                 browserWidgets(streamSize: layout.size)
+                InteractiveWidgetOverlayView(model: model, streamSize: layout.size)
             }
             .frame(width: layout.size.width, height: layout.size.height)
             .offset(layout.offset)
