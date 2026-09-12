@@ -479,10 +479,11 @@ struct MainView: View {
                     .allowsHitTesting(!model.editWidgetsMode)
                 StreamOverlayTapGridView(camera: model.camera, size: layout.size)
                 browserWidgets(streamSize: layout.size)
-                InteractiveWidgetOverlayView(model: model, streamSize: layout.size)
+                InteractiveWidgetOverlayView(model: model, previewSize: layout.size)
             }
             .frame(width: layout.size.width, height: layout.size.height)
             .offset(layout.offset)
+            .clipped()
         }
     }
 
@@ -620,7 +621,7 @@ struct MainView: View {
                         .background(.black.opacity(0.6))
                         .clipShape(Circle())
                 }
-                .padding(.trailing, 8)
+                .padding(.trailing, 24)
                 .transition(.opacity)
             }
         }
@@ -628,19 +629,21 @@ struct MainView: View {
 
     private func edgesToIgnore() -> Edge.Set {
         if isPhone() {
-            if orientation.isPortrait {
+            if !orientation.isPortrait && model.hideQuickButtons {
+                return [.all]
+            } else if orientation.isPortrait {
                 if quickButtons.bigButtons, quickButtons.twoColumns {
-                    [.bottom]
+                    return [.bottom]
                 } else {
-                    []
+                    return []
                 }
             } else if quickButtons.bigButtons, quickButtons.twoColumns {
-                [.top, .trailing]
+                return [.top, .trailing]
             } else {
-                [.top]
+                return [.top]
             }
         } else {
-            []
+            return []
         }
     }
 
