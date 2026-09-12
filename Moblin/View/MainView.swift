@@ -628,12 +628,18 @@ struct MainView: View {
 
     private func edgesToIgnore() -> Edge.Set {
         if isPhone() {
-            if !orientation.isPortrait {
+            if !orientation.isPortrait && model.hideQuickButtons {
                 return [.all]
+            } else if orientation.isPortrait {
+                if quickButtons.bigButtons, quickButtons.twoColumns {
+                    return [.bottom]
+                } else {
+                    return []
+                }
             } else if quickButtons.bigButtons, quickButtons.twoColumns {
-                return [.bottom]
+                return [.top, .trailing]
             } else {
-                return []
+                return [.top]
             }
         } else {
             return []

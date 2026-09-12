@@ -131,50 +131,35 @@ private struct StatusView: View {
 
 private struct IconAndSettingsView: View {
     let model: Model
-    @ObservedObject var store: Store
 
     var body: some View {
-        VStack(spacing: 4) {
-            HCenter {
-                Button {
-                    withAnimation(.easeInOut(duration: 0.25)) {
-                        model.hideQuickButtons.toggle()
-                    }
-                } label: {
-                    Image(systemName: model.hideQuickButtons ? "eye.slash" : "eye")
-                        .frame(width: controlBarButtonSize, height: controlBarButtonSize)
-                        .overlay(
-                            Circle()
-                                .stroke(.secondary)
-                        )
-                        .foregroundStyle(model.hideQuickButtons ? .orange : .white)
+        HCenter {
+            Button {
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    model.hideQuickButtons = true
                 }
-                .buttonStyle(.borderless)
-                Button {
-                    model.toggleShowingPanel(type: nil, panel: .settings)
-                } label: {
-                    Image(systemName: "gearshape")
-                        .frame(width: controlBarButtonSize, height: controlBarButtonSize)
-                        .overlay(
-                            Circle()
-                                .stroke(.secondary)
-                        )
-                        .foregroundStyle(.white)
-                }
-                .buttonStyle(.borderless)
+            } label: {
+                Image(systemName: "eye.slash")
+                    .frame(width: controlBarButtonSize, height: controlBarButtonSize)
+                    .overlay(
+                        Circle()
+                            .stroke(.secondary)
+                    )
+                    .foregroundStyle(.white)
             }
-            HCenter {
-                Button {
-                    model.toggleShowingPanel(type: nil, panel: .store)
-                } label: {
-                    Image("\(store.iconImage)NoBackground")
-                        .interpolation(.high)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: controlBarButtonSize, height: controlBarButtonSize)
-                }
-                .buttonStyle(.borderless)
+            .buttonStyle(.borderless)
+            Button {
+                model.toggleShowingPanel(type: nil, panel: .settings)
+            } label: {
+                Image(systemName: "gearshape")
+                    .frame(width: controlBarButtonSize, height: controlBarButtonSize)
+                    .overlay(
+                        Circle()
+                            .stroke(.secondary)
+                    )
+                    .foregroundStyle(.white)
             }
+            .buttonStyle(.borderless)
         }
     }
 }
@@ -217,7 +202,7 @@ private struct MainPageView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            IconAndSettingsView(model: model, store: store)
+            IconAndSettingsView(model: model)
                 .padding(.vertical, 2)
                 .frame(width: buttonsWidth())
             PageView(model: model,
