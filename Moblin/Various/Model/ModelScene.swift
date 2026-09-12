@@ -262,6 +262,36 @@ extension Model {
         }
     }
 
+    func bringWidgetToFront(widgetId: UUID) {
+        guard let scene = getSelectedScene() else { return }
+        if let index = scene.widgets.firstIndex(where: { $0.widgetId == widgetId }) {
+            let sceneWidget = scene.widgets.remove(at: index)
+            scene.widgets.append(sceneWidget)
+            storeSettings()
+            sceneUpdated(attachCamera: false, updateRemoteScene: true)
+        }
+    }
+
+    func sendWidgetToBack(widgetId: UUID) {
+        guard let scene = getSelectedScene() else { return }
+        if let index = scene.widgets.firstIndex(where: { $0.widgetId == widgetId }) {
+            let sceneWidget = scene.widgets.remove(at: index)
+            scene.widgets.insert(sceneWidget, at: 0)
+            storeSettings()
+            sceneUpdated(attachCamera: false, updateRemoteScene: true)
+        }
+    }
+
+    func deleteWidgetFromScene(widgetId: UUID) {
+        guard let scene = getSelectedScene() else { return }
+        if let index = scene.widgets.firstIndex(where: { $0.widgetId == widgetId }) {
+            scene.widgets.remove(at: index)
+            selectedWidgetForInteraction = nil
+            storeSettings()
+            sceneUpdated(attachCamera: false, updateRemoteScene: true)
+        }
+    }
+
     func sceneUpdated(attachCamera: Bool = false, updateRemoteScene: Bool = true) {
         guard let scene = getSelectedScene() else {
             sceneUpdatedOff()
