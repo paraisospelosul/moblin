@@ -483,7 +483,6 @@ struct MainView: View {
             }
             .frame(width: layout.size.width, height: layout.size.height)
             .offset(layout.offset)
-            .clipped()
         }
     }
 
@@ -629,18 +628,12 @@ struct MainView: View {
 
     private func edgesToIgnore() -> Edge.Set {
         if isPhone() {
-            if !orientation.isPortrait && model.hideQuickButtons {
+            if !orientation.isPortrait {
                 return [.all]
-            } else if orientation.isPortrait {
-                if quickButtons.bigButtons, quickButtons.twoColumns {
-                    return [.bottom]
-                } else {
-                    return []
-                }
             } else if quickButtons.bigButtons, quickButtons.twoColumns {
-                return [.top, .trailing]
+                return [.bottom]
             } else {
-                return [.top]
+                return []
             }
         } else {
             return []
