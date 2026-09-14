@@ -131,18 +131,21 @@ private struct StatusView: View {
 
 private struct IconAndSettingsView: View {
     let model: Model
-    @ObservedObject var store: Store
 
     var body: some View {
         HCenter {
             Button {
-                model.toggleShowingPanel(type: nil, panel: .store)
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    model.hideQuickButtons = true
+                }
             } label: {
-                Image("\(store.iconImage)NoBackground")
-                    .interpolation(.high)
-                    .resizable()
-                    .scaledToFit()
+                Image(systemName: "eye.slash")
                     .frame(width: controlBarButtonSize, height: controlBarButtonSize)
+                    .overlay(
+                        Circle()
+                            .stroke(.secondary)
+                    )
+                    .foregroundStyle(.white)
             }
             .buttonStyle(.borderless)
             Button {
@@ -199,7 +202,7 @@ private struct MainPageView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            IconAndSettingsView(model: model, store: store)
+            IconAndSettingsView(model: model)
                 .padding(.vertical, 2)
                 .frame(width: buttonsWidth())
             PageView(model: model,

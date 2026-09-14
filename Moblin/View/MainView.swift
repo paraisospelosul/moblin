@@ -594,13 +594,36 @@ struct MainView: View {
                 }
                 .frame(width: model.panelHidden ? 1 : settingsHalfWidth)
             }
-            ControlBarLandscapeView(model: model, quickButtons: quickButtons)
+            if !model.hideQuickButtons {
+                ControlBarLandscapeView(model: model, quickButtons: quickButtons)
+                    .transition(.move(edge: .trailing))
+            }
+        }
+        .overlay(alignment: .trailing) {
+            if model.hideQuickButtons {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        model.hideQuickButtons = false
+                    }
+                } label: {
+                    Image(systemName: "eye")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 32, height: 32)
+                        .background(.black.opacity(0.6))
+                        .clipShape(Circle())
+                        .padding(.trailing, 8)
+                }
+                .buttonStyle(.borderless)
+            }
         }
     }
 
     private func edgesToIgnore() -> Edge.Set {
         if isPhone() {
-            if orientation.isPortrait {
+            if !orientation.isPortrait && model.hideQuickButtons {
+                [.all]
+            } else if orientation.isPortrait {
                 if quickButtons.bigButtons, quickButtons.twoColumns {
                     [.bottom]
                 } else {

@@ -458,6 +458,7 @@ final class Model: NSObject, ObservableObject {
     @Published var layout: SettingsWidgetLayout?
     @Published var workoutType: WatchProtocolWorkoutType?
     @Published var photoShootEnabled: Bool = false
+    @Published var hideQuickButtons: Bool = false
 
     var streamState = StreamState.disconnected {
         didSet {

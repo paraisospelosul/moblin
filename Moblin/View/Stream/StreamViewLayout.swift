@@ -8,8 +8,21 @@ struct StreamViewLayout {
          aspectRatio: CGFloat,
          portraitOrientation: Bool,
          portraitStream: Bool,
-         portraitVideoOffset: Double)
+         portraitVideoOffset: Double,
+         fillScreen: Bool = false)
     {
+        if fillScreen {
+            var size = CGSize(width: metrics.size.width, height: metrics.size.width / aspectRatio)
+            if size.height < metrics.size.height {
+                size = CGSize(width: metrics.size.height * aspectRatio, height: metrics.size.height)
+            }
+            let x = (metrics.size.width - size.width) / 2
+            let y = (metrics.size.height - size.height) / 2
+            self.size = size
+            offset = CGSize(width: x, height: y)
+            return
+        }
+
         let insets = metrics.safeAreaInsets
         let fullSize = CGSize(width: metrics.size.width + insets.leading + insets.trailing,
                               height: metrics.size.height + insets.top + insets.bottom)
@@ -44,6 +57,7 @@ extension Model {
                          aspectRatio: stream.dimensions().aspectRatio(),
                          portraitOrientation: orientation.isPortrait,
                          portraitStream: stream.portrait,
-                         portraitVideoOffset: stream.portrait ? 0 : portraitVideoOffsetFromTop)
+                         portraitVideoOffset: stream.portrait ? 0 : portraitVideoOffsetFromTop,
+                         fillScreen: !orientation.isPortrait && hideQuickButtons)
     }
 }
